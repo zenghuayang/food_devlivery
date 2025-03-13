@@ -1,0 +1,175 @@
+import 'package:dots_indicator/dots_indicator.dart';
+import 'package:flutter/material.dart';
+import 'package:food_devlivery/utils/colors.dart';
+import 'package:food_devlivery/widget/big_text.dart';
+import 'package:food_devlivery/widget/icon_text.dart';
+import 'package:food_devlivery/widget/small_text.dart';
+
+class FoodBdoyPage extends StatefulWidget {
+  const FoodBdoyPage({Key? key}) : super(key: key);
+
+  @override
+  _FoodBdoyPageState createState() => _FoodBdoyPageState();
+}
+
+class _FoodBdoyPageState extends State<FoodBdoyPage> {
+  PageController _pageController =
+      PageController(viewportFraction: 0.85, initialPage: 0);
+
+  var _currentPageValue = 0.0;
+  double _scaleFactor = 0.8;
+  double _height = 220.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController.addListener(() {
+      setState(() {
+        _currentPageValue = _pageController.page!;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          height: 300,
+          child: PageView.builder(
+              itemCount: 5,
+              controller: _pageController,
+              itemBuilder: (context, index) {
+                return _buildItemWidget(index);
+              }),
+        ),
+        new DotsIndicator(
+          dotsCount: 5,
+          position: _currentPageValue,
+          decorator: DotsDecorator(
+            size: const Size.square(9.0),
+            activeSize: const Size(18.0, 9.0),
+            activeShape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0)),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // 构建滚动内容
+  Widget _buildItemWidget(int index) {
+    Matrix4 matrix = new Matrix4.identity();
+    if (index == _currentPageValue.floor()) {
+      var currScale = 1 - (_currentPageValue - index) * (1 - _scaleFactor);
+      var currTrans = _height * (1 - currScale) / 2;
+      matrix = Matrix4.diagonal3Values(1, currScale, 1)
+        ..setTranslationRaw(0, currTrans, 0);
+    } else if (index == _currentPageValue.floor() + 1) {
+      var currScale =
+          _scaleFactor + (_currentPageValue - index + 1) * (1 - _scaleFactor);
+      var currTrans = _height * (1 - currScale) / 2;
+      matrix = Matrix4.diagonal3Values(1, currScale, 1);
+      matrix = Matrix4.diagonal3Values(1, currScale, 1)
+        ..setTranslationRaw(0, currTrans, 0);
+    } else if (index == _currentPageValue.floor() - 1) {
+      var currScale = 1 - (_currentPageValue - index) * (1 - _scaleFactor);
+      var currTrans = _height * (1 - currScale) / 2;
+      matrix = Matrix4.diagonal3Values(1, currScale, 1);
+      matrix = Matrix4.diagonal3Values(1, currScale, 1)
+        ..setTranslationRaw(0, currTrans, 0);
+    } else {
+      var currScale = 0.8;
+      var currTrans = _height * (1 - _scaleFactor) / 2;
+      matrix = Matrix4.diagonal3Values(1, currScale, 1)
+        ..setTranslationRaw(0, currTrans, 0);
+    }
+
+    return Transform(
+      transform: matrix,
+      child: Stack(
+        children: [
+          Container(
+            height: _height,
+            margin: EdgeInsets.only(left: 8, right: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              color: index.isEven ? Colors.red : Colors.blue,
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: AssetImage("assets/image/food0.png"),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: 120,
+              padding: EdgeInsets.only(left: 10, right: 10, top: 15),
+              margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0xFFe8e8e8),
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                    offset: Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BigText(text: "鸡腿套餐"),
+                  Row(
+                    children: [
+                      Wrap(
+                        children: List.generate(
+                            5,
+                            (index) => Icon(
+                                  Icons.star,
+                                  color: AppColors.mainColor,
+                                )),
+                      ),
+                      SizedBox(width: 5),
+                      SmallText(text: '4.5'),
+                      SizedBox(width: 5),
+                      SmallText(text: '1250'),
+                      SizedBox(width: 5),
+                      SmallText(text: 'comments'),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      IconAndText(
+                          text: "text",
+                          icon: Icons.circle_sharp,
+                          iconColor: AppColors.iconColor1),
+                      IconAndText(
+                          text: "定位",
+                          icon: Icons.location_on,
+                          iconColor: AppColors.iconColor2),
+                      IconAndText(
+                          text: "时间",
+                          icon: Icons.timer,
+                          iconColor: AppColors.mainColor),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
