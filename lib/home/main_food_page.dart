@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_devlivery/home/food_bdoy_page.dart';
 import 'package:food_devlivery/utils/colors.dart';
+import 'package:food_devlivery/utils/dimensions.dart';
 import 'package:food_devlivery/widget/big_text.dart';
 import 'package:food_devlivery/widget/small_text.dart';
 
@@ -25,10 +26,7 @@ class _MainFoodPageState extends State<MainFoodPage> {
               children: [
                 Column(
                   children: [
-                    BigText(
-                      text: '上海',
-                      color: AppColors.mainColor,
-                    ),
+                    BigText(text: '上海', color: AppColors.mainColor),
                     Row(
                       children: [
                         SmallText(text: '定位'),
@@ -40,8 +38,8 @@ class _MainFoodPageState extends State<MainFoodPage> {
                   ],
                 ),
                 Container(
-                  width: 45,
-                  height: 45,
+                  width: Dimensions.heigh45,
+                  height: Dimensions.heigh45,
                   child: Icon(
                     Icons.search,
                     color: Colors.white,

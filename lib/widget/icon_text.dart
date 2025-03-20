@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 
+import '../utils/dimensions.dart';
+
 class IconAndText extends StatelessWidget {
   final String text;
   final IconData icon;
   final Color iconColor;
+  double? size;
 
-  const IconAndText({
+  IconAndText({
     Key? key,
     required this.text,
     required this.icon,
+    this.size,
     this.iconColor = const Color(0xFF89dad0),
   }) : super(key: key);
 
@@ -20,7 +24,7 @@ class IconAndText extends StatelessWidget {
         SizedBox(width: 5),
         Text(
           text,
-          style: const TextStyle(fontSize: 16),
+          style: TextStyle(fontSize: size == null ? Dimensions.font16 : size),
         ),
       ],
     );

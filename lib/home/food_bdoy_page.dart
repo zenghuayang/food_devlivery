@@ -1,6 +1,7 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:food_devlivery/utils/colors.dart';
+import 'package:food_devlivery/utils/dimensions.dart';
 import 'package:food_devlivery/widget/big_text.dart';
 import 'package:food_devlivery/widget/icon_text.dart';
 import 'package:food_devlivery/widget/small_text.dart';
@@ -18,7 +19,7 @@ class _FoodBdoyPageState extends State<FoodBdoyPage> {
 
   var _currentPageValue = 0.0;
   double _scaleFactor = 0.8;
-  double _height = 220.0;
+  double _height = Dimensions.pageViewContainer;
 
   @override
   void initState() {
@@ -37,28 +38,73 @@ class _FoodBdoyPageState extends State<FoodBdoyPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          height: 300,
-          child: PageView.builder(
-              itemCount: 5,
-              controller: _pageController,
-              itemBuilder: (context, index) {
-                return _buildItemWidget(index);
-              }),
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              height: Dimensions.pageView,
+              child: PageView.builder(
+                  itemCount: 5,
+                  controller: _pageController,
+                  itemBuilder: (context, index) {
+                    return _buildItemWidget(index);
+                  }),
+            ),
+            new DotsIndicator(
+              dotsCount: 5,
+              position: _currentPageValue,
+              decorator: DotsDecorator(
+                size: const Size.square(9.0),
+                activeSize: const Size(18.0, 9.0),
+                activeShape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0)),
+              ),
+            ),
+            SizedBox(height: 30),
+            Container(
+              child: Row(
+                children: [
+                  SizedBox(width: Dimensions.heigh20),
+                  BigText(text: "Popular"),
+                  SizedBox(width: Dimensions.heigh10),
+                  SmallText(text: 'Food'),
+                ],
+              ),
+            ),
+            Container(
+              child: ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: EdgeInsets.only(bottom: Dimensions.heigh20),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 200,
+                            height: 120,
+                            margin: EdgeInsets.only(
+                                left: Dimensions.heigh10,
+                                right: Dimensions.heigh10),
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.circular(Dimensions.radius30),
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: AssetImage("assets/image/food0.png"),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                  itemCount: 10),
+            )
+          ],
         ),
-        new DotsIndicator(
-          dotsCount: 5,
-          position: _currentPageValue,
-          decorator: DotsDecorator(
-            size: const Size.square(9.0),
-            activeSize: const Size(18.0, 9.0),
-            activeShape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0)),
-          ),
-        ),
-      ],
+      ),
     );
   }
 
@@ -96,9 +142,10 @@ class _FoodBdoyPageState extends State<FoodBdoyPage> {
         children: [
           Container(
             height: _height,
-            margin: EdgeInsets.only(left: 8, right: 8),
+            margin: EdgeInsets.only(
+                left: Dimensions.heigh10, right: Dimensions.heigh10),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(Dimensions.radius30),
               color: index.isEven ? Colors.red : Colors.blue,
               image: DecorationImage(
                 fit: BoxFit.cover,
@@ -109,11 +156,17 @@ class _FoodBdoyPageState extends State<FoodBdoyPage> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: 120,
-              padding: EdgeInsets.only(left: 10, right: 10, top: 15),
-              margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+              height: Dimensions.pageViewTextContainer,
+              padding: EdgeInsets.only(
+                  left: Dimensions.heigh10,
+                  right: Dimensions.heigh10,
+                  top: Dimensions.heigh15),
+              margin: EdgeInsets.only(
+                  left: Dimensions.heigh20,
+                  right: Dimensions.heigh20,
+                  bottom: Dimensions.heigh20),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.circular(Dimensions.radius30),
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
@@ -132,21 +185,23 @@ class _FoodBdoyPageState extends State<FoodBdoyPage> {
                     children: [
                       Wrap(
                         children: List.generate(
-                            5,
-                            (index) => Icon(
-                                  Icons.star,
-                                  color: AppColors.mainColor,
-                                )),
+                          5,
+                          (index) => Icon(
+                            Icons.star,
+                            color: AppColors.mainColor,
+                            size: Dimensions.heigh15,
+                          ),
+                        ),
                       ),
-                      SizedBox(width: 5),
+                      SizedBox(width: Dimensions.heigh10),
                       SmallText(text: '4.5'),
-                      SizedBox(width: 5),
+                      SizedBox(width: Dimensions.heigh10),
                       SmallText(text: '1250'),
-                      SizedBox(width: 5),
+                      SizedBox(width: Dimensions.heigh10),
                       SmallText(text: 'comments'),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: Dimensions.heigh10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
